@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import MovieForm from './components/MovieForm';
-import UserForm from './components/UserForm';
+import { useEffect, useState } from "react";
+import "./App.css";
+import MovieForm from "./components/MovieForm";
+import UserForm from "./components/UserForm";
 
 const port = import.meta.env.VITE_PORT;
 const apiUrl = `http://localhost:${port}`;
 
 function App() {
   const [movies, setMovies] = useState([]);
-
+  const [newMovie, setNewMovie] = useState(false);
   useEffect(() => {
     fetch(`${apiUrl}/movie`)
-      .then(res => res.json())
-      .then(res => setMovies(res.data));
-  }, []);
+      .then((res) => res.json())
+      .then((res) => setMovies(res.data));
+  }, [newMovie]);
 
   /**
    * HINTS!
@@ -34,16 +34,38 @@ function App() {
    * */
 
   const handleRegister = async ({ username, password }) => {
-
+    await fetch(`${apiUrl}/user/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username, password: password }),
+    });
   };
 
   const handleLogin = async ({ username, password }) => {
-
+    const response = await fetch(`${apiUrl}/user/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username, password: password }),
+    });
+    const token = await response.json();
+    localStorage.setItem("token", token.data);
   };
 
   const handleCreateMovie = async ({ title, description, runtimeMins }) => {
-
-  }
+    const response = await fetch(`${apiUrl}/movie`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authentication: localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        runtimeMins: runtimeMins,
+      }),
+    });
+    setNewMovie(!newMovie);
+  };
 
   return (
     <div className="App">
@@ -58,7 +80,7 @@ function App() {
 
       <h1>Movie list</h1>
       <ul>
-        {movies.map(movie => {
+        {movies.map((movie) => {
           return (
             <li key={movie.id}>
               <h3>{movie.title}</h3>
