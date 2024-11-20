@@ -10,7 +10,7 @@ This project demonstrates a backend application where users can register, log in
 
 ## Getting Started
 
-The included `.env` file allows for seamless testing.
+The included `.env` file allows for seamless testing. **This is temporary and will be removed.**
 
 ### Prerequisites
 
