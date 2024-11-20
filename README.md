@@ -2,7 +2,7 @@
 
 This project demonstrates a backend application where users can register, log in, and add movies to a database. It showcases my backend development skills.
 
-****Please be aware that the frontend is close to nonexistent since it's purpose is to demonstrate my backend capabilities****
+****Please be aware that the frontend is close to nonexistent, since this project's purpose is to demonstrate my backend capabilities****
 
 ## Features
 
