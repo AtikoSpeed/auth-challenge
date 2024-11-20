@@ -34,11 +34,12 @@ function App() {
    * */
 
   const handleRegister = async ({ username, password }) => {
-    await fetch(`${apiUrl}/user/register`, {
+    const response = await fetch(`${apiUrl}/user/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: username, password: password }),
     });
+    alert(await response.json());
   };
 
   const handleLogin = async ({ username, password }) => {
@@ -49,6 +50,7 @@ function App() {
     });
     const token = await response.json();
     localStorage.setItem("token", token.data);
+    token.errer ? alert(token.error) : alert("Logged in successfully");
   };
 
   const handleCreateMovie = async ({ title, description, runtimeMins }) => {
@@ -65,6 +67,7 @@ function App() {
       }),
     });
     setNewMovie(!newMovie);
+    alert(await response.json());
   };
 
   return (

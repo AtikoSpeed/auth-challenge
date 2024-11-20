@@ -6,18 +6,22 @@ const prisma = new PrismaClient();
 const jwtSecret = "mysecret";
 
 const register = async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  const cryptHash = await bcrypt.hash(password, 10);
+    const cryptHash = await bcrypt.hash(password, 10);
 
-  const createdUser = await prisma.user.create({
-    data: {
-      username: username,
-      password: cryptHash,
-    },
-  });
+    const createdUser = await prisma.user.create({
+      data: {
+        username: username,
+        password: cryptHash,
+      },
+    });
 
-  res.json({ data: createdUser });
+    res.status(201).json("User created successfully");
+  } catch {
+    res.status(409).json("User already exists");
+  }
 };
 
 const login = async (req, res) => {
@@ -28,13 +32,13 @@ const login = async (req, res) => {
   });
 
   if (!foundUser) {
-    return res.status(401).json({ error: "Invalid username or password." });
+    return res.status(401).json({ error: "Invalid username." });
   }
 
   const passwordsMatch = await bcrypt.compare(password, foundUser.password);
 
   if (!passwordsMatch) {
-    return res.status(401).json({ error: "Invalid username or password." });
+    return res.status(401).json({ error: "Invalid password." });
   }
 
   const token = jwt.sign(username, jwtSecret);
